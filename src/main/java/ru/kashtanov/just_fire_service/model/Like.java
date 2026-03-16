@@ -16,8 +16,10 @@ import java.util.Objects;
 @Setter
 @NoArgsConstructor
 @Table(uniqueConstraints = {
-        @UniqueConstraint(columnNames = {"gratitude_id", "user_id"})
-})
+        @UniqueConstraint(columnNames = {"gratitude_id", "user_id"}
+        )
+}, name = "just_fire_like")
+
 public class Like {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "like_factory")
@@ -33,7 +35,6 @@ public class Like {
     private User user;
 
 
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -45,10 +46,11 @@ public class Like {
     public int hashCode() {
         return Objects.hash(id);
     }
+
     @Override
     public String toString() {
         return "Like{" +
-                "id=" + id+
+                "id=" + id +
                 '}';
     }
 }
