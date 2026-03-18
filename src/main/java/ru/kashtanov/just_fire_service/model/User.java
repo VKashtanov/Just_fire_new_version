@@ -31,6 +31,14 @@ public class User {
 
     @OneToMany(mappedBy="user")
     private List<Like> likes;
+    private String fullName;
+    private String firstName;
+    private String middleName;
+    private String lastName;
+    private String email;
+    private String position;
+    private String portraitUrl;
+    private String phone="";
 
 
 

@@ -6,5 +6,5 @@ import org.springframework.stereotype.Repository;
  * @author Viktor Кashtanov
  */
 @Repository
-public interface LikeRepo {
+public interface SiteConfig {
 }
