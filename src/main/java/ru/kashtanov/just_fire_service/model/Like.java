@@ -18,12 +18,12 @@ import java.util.Objects;
 @Table(uniqueConstraints = {
         @UniqueConstraint(columnNames = {"gratitude_id", "user_id"}
         )
-}, name = "just_fire_like")
-
+}, name = "just_fire_likes")
 public class Like {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "like_factory")
     @SequenceGenerator(name = "like_factory", sequenceName = "like_id_factory")
+    @Column(name = "id")
     private Long id;
 
     @ManyToOne

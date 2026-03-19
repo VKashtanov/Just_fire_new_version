@@ -16,11 +16,12 @@ import java.util.Objects;
 @Getter
 @Setter
 @NoArgsConstructor
-@Table(name = "just_fire_user")
+@Table(name = "just_fire_users")
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "user_factory")
     @SequenceGenerator(name = "user_factory", sequenceName = "user_id_factory")
+    @Column(name = "id")
     private Long id;
 
     @OneToMany(mappedBy = "recipient")
@@ -29,17 +30,32 @@ public class User {
     @OneToMany(mappedBy = "author")
     private List<Gratitude> authoredGratitudes;
 
-    @OneToMany(mappedBy="user")
+    @OneToMany(mappedBy = "user")
     private List<Like> likes;
-    private String fullName;
-    private String firstName;
-    private String middleName;
-    private String lastName;
-    private String email;
-    private String position;
-    private String portraitUrl;
-    private String phone="";
 
+    @Column(name = "first_name")
+    private String firstName;
+
+    @Column(name = "middle_name")
+    private String middleName;
+
+    @Column(name = "last_name")
+    private String lastName;
+
+    @Column(name = "email")
+    private String email;
+
+    @Column(name = "position")
+    private String position;
+
+    @Column(name = "portrait_url")
+    private String portraitUrl;
+
+    @Column(name = "phone")
+    private String phone = "";
+
+    @Column(name = "full_name")
+    private String fullName;
 
 
     @Override
@@ -57,7 +73,7 @@ public class User {
     @Override
     public String toString() {
         return "User{" +
-                "id=" + id+
+                "id=" + id +
                 '}';
     }
 }

@@ -18,15 +18,16 @@ import java.util.Objects;
 @Setter
 @NoArgsConstructor
 @Table(uniqueConstraints = {
-        @UniqueConstraint(columnNames = {"gratitude_id", "recipient_id"})
-})
+        @UniqueConstraint(columnNames = {"gratitude_id", "recipient_id"})},
+        name = "gratitude_recipients")
 public class GratitudeRecipient {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "gratitudeRecipient_factory")
     @SequenceGenerator(name = "gratitudeRecipient_factory", sequenceName = "gratitudeRecipient_factory_id_factory")
+    @Column(name = "id")
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY )
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "gratitude_id")
     private Gratitude gratitude;
 
@@ -46,10 +47,11 @@ public class GratitudeRecipient {
     public int hashCode() {
         return Objects.hash(id);
     }
+
     @Override
     public String toString() {
         return "GratitudeRecipient{" +
-                "id=" + id+
+                "id=" + id +
                 '}';
     }
 }

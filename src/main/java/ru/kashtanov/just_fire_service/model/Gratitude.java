@@ -17,10 +17,12 @@ import java.util.Objects;
 @Getter
 @Setter
 @NoArgsConstructor
+@Table(name = "gratitudes")
 public class Gratitude {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "gratitude_factory")
     @SequenceGenerator(name = "gratitude_factory", sequenceName = "gratitude_id_factory")
+    @Column(name = "id")
     private Long id;
 
     @ManyToOne
@@ -34,8 +36,10 @@ public class Gratitude {
     private List<Like> likes;
 
     @CreationTimestamp
+    @Column(name = "timestamp")
     private Long timestamp;
 
+    @Column(name = "content")
     private String content;
 
 

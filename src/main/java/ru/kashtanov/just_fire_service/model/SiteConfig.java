@@ -15,16 +15,20 @@ import java.util.Objects;
 @Getter
 @Setter
 @NoArgsConstructor
+@Table(name = "site_configs")
 public class SiteConfig {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "config_factory")
     @SequenceGenerator(name = "config_factory", sequenceName = "config_id_factory")
+    @Column(name = "id")
     private Long id;
 
     @Column(name = "site_id", unique = true)
     private Long siteId;
+
     @Column(name = "generalDirector_id")
     private Long generalDirector;
+
     @Column(name = "siteResponsible_id")
     private Long siteResponsible;
 
