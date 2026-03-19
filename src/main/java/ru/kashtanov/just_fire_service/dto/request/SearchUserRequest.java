@@ -14,4 +14,5 @@ public class SearchUserRequest {
     private Long companyId;
     private String keyword;
     private Integer limit;
+    private Integer offset;
 }
