@@ -1,8 +1,20 @@
 package ru.kashtanov.just_fire_service.service;
 
+import ru.kashtanov.just_fire_service.dto.GratitudeDto;
+import ru.kashtanov.just_fire_service.dto.GratitudeSaveDto;
+import ru.kashtanov.just_fire_service.model.Gratitude;
+
+import java.util.List;
+import java.util.Optional;
+
 /**
  * @author Viktor Кashtanov
  */
 
 public interface GratitudeService {
+   public abstract Gratitude saveGratitude(GratitudeSaveDto dto);
+   public abstract List<GratitudeDto> findAllGratitudes();
+   public abstract List<GratitudeDto> findReceivedGratitudesByUser(Long userId);
+   public abstract List<GratitudeDto> findSentGratitudesByUser(Long userId);
+   public abstract Optional<GratitudeDto> findGratitudeById(Integer id);
 }

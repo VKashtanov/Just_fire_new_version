@@ -2,10 +2,15 @@ package ru.kashtanov.just_fire_service.service.impl;
 
 import org.springframework.stereotype.Service;
 import ru.kashtanov.just_fire_service.dto.GratitudeDto;
+import ru.kashtanov.just_fire_service.dto.GratitudeSaveDto;
 import ru.kashtanov.just_fire_service.dto.UserDto;
+import ru.kashtanov.just_fire_service.exception.UserNotFoundException;
 import ru.kashtanov.just_fire_service.model.Gratitude;
+import ru.kashtanov.just_fire_service.model.User;
 import ru.kashtanov.just_fire_service.model.join.GratitudeRecipient;
 import ru.kashtanov.just_fire_service.repository.GratitudeRepo;
+import ru.kashtanov.just_fire_service.service.GratitudeService;
+import ru.kashtanov.just_fire_service.service.UserService;
 
 import java.util.List;
 import java.util.Optional;
@@ -14,36 +19,53 @@ import java.util.Optional;
  * @author Viktor Кashtanov
  */
 @Service
-public class GratitudeServiceImpl {
+public class GratitudeServiceImpl implements GratitudeService {
     private final GratitudeRepo gratitudeRepo;
+    private final LiferayUserService liferayUserService;
+    private final UserService userService;
 
-
-    public GratitudeServiceImpl(GratitudeRepo gratitudeRepo) {
+    public GratitudeServiceImpl(GratitudeRepo gratitudeRepo, LiferayUserService liferayUserService, UserService userService) {
         this.gratitudeRepo = gratitudeRepo;
+        this.liferayUserService = liferayUserService;
+        this.userService = userService;
     }
 
-    public Gratitude saveGratitude(Gratitude gratitude) {
-        return gratitudeRepo.save(gratitude);
+    @Override
+    public Gratitude saveGratitude(GratitudeSaveDto dto) {
+        // 1. Check if the user is in the service DB
+        // if it's not ,use liferay Api go get user from the outer db
+        try {
+            User localUser = userService.findUserById(dto.getAuthorId());
+        } catch (UserNotFoundException e) {
+//            UserDto userById = liferayUserService.findUserById(dto.getAuthorId());
+
+
+        }
+
+        return gratitudeRepo.save(null);
     }
 
+    @Override
     public List<GratitudeDto> findAllGratitudes() {
         List<Gratitude> all = gratitudeRepo.findAll();
         return all.stream().map(this::convertToDto).toList();
 
     }
 
+    @Override
     public List<GratitudeDto> findReceivedGratitudesByUser(Long userId) {
         List<Gratitude> gratitudes = gratitudeRepo.findUserReceivedGratitudesNative(userId);
         return gratitudes.stream().map(this::convertToDto).toList();
 
     }
 
+    @Override
     public List<GratitudeDto> findSentGratitudesByUser(Long userId) {
         List<Gratitude> gratitudes = gratitudeRepo.findUserSentGratitudesNative(userId);
         return gratitudes.stream().map(this::convertToDto).toList();
     }
 
-
+    @Override
     public Optional<GratitudeDto> findGratitudeById(Integer id) {
         Optional<Gratitude> byId = gratitudeRepo.findById(id);
         if (byId.isPresent()) {
@@ -52,53 +74,26 @@ public class GratitudeServiceImpl {
         return Optional.empty();
     }
 
+
     private GratitudeDto convertToDto(Gratitude gratitude) {
         var dto = new GratitudeDto();
         dto.setId(gratitude.getId());
         dto.setContent(gratitude.getContent());
         dto.setTimestamp(gratitude.getTimestamp());
 
-        UserDto authorDto = buildUserDto(gratitude);
+        UserDto authorDto = userService.buildUserDto(gratitude.getAuthor());
         dto.setAuthor(authorDto);
 
-        List<UserDto> recipients = buildRecipientsDto(gratitude);
+        List<UserDto> recipients = buildRecipientsDto(gratitude.getRecipientLinks());
         dto.setRecipients(recipients);
         return dto;
-
-
     }
 
-    private UserDto buildUserDto(Gratitude gratitude) {
-        UserDto authorDto = new UserDto();
-        authorDto.setUserId(gratitude.getAuthor().getId());
-        authorDto.setFirstName(gratitude.getAuthor().getFirstName());
-        authorDto.setLastName(gratitude.getAuthor().getLastName());
-        authorDto.setFullName(gratitude.getAuthor().getFirstName() + " " + gratitude.getAuthor().getLastName());
-        authorDto.setEmail(gratitude.getAuthor().getEmail());
-        authorDto.setPosition(gratitude.getAuthor().getPosition());
-        authorDto.setPortraitUrl(gratitude.getAuthor().getPortraitUrl());
-        authorDto.setPhone(gratitude.getAuthor().getPhone() != null ? gratitude.getAuthor().getPhone() : "");
-        return authorDto;
-    }
 
-    public List<UserDto> buildRecipientsDto(Gratitude gratitude) {
-        return gratitude.getRecipientLinks().stream()
+    public List<UserDto> buildRecipientsDto(List<GratitudeRecipient> recipients) {
+        return recipients.stream()
                 .map(GratitudeRecipient::getRecipient)  // via hibernate we get it , since in the children table we store only user IDs
-                .map(user -> {
-                    UserDto userDto = new UserDto();
-                    userDto.setUserId(user.getId());
-                    userDto.setFirstName(user.getFirstName());
-                    userDto.setMiddleName(user.getMiddleName());
-                    userDto.setLastName(user.getLastName());
-                    userDto.setFullName(user.getFirstName() + " " +
-                            (user.getMiddleName() != null ? user.getMiddleName() + " " : "") +
-                            user.getLastName());
-                    userDto.setEmail(user.getEmail());
-                    userDto.setPosition(user.getPosition());
-                    userDto.setPortraitUrl(user.getPortraitUrl());
-                    userDto.setPhone(user.getPhone() != null ? user.getPhone() : "");
-                    return userDto;
-                })
+                .map(userService::buildUserDto)
                 .toList();
     }
 }

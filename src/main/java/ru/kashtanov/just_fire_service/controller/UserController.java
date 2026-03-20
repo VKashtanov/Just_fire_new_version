@@ -7,7 +7,6 @@ import ru.kashtanov.just_fire_service.dto.UserDto;
 import ru.kashtanov.just_fire_service.dto.request.SearchUserRequest;
 import ru.kashtanov.just_fire_service.service.impl.LiferayUserService;
 
-import java.util.Collections;
 import java.util.List;
 
 /**
@@ -21,15 +20,13 @@ public class UserController {
     private LiferayUserService liferayUserService;  // Только сервис!
 
     @GetMapping("/{userId}")
-    public ResponseEntity<String> getUser(@PathVariable Long userId) {
-        String user = liferayUserService.getUser(userId);
-        return ResponseEntity.ok(user);
+    public ResponseEntity<UserDto> getUser(@PathVariable Long userId) {
+        return liferayUserService.findUserById(userId);
     }
 
 
     @PostMapping("/_search")
-    public List<UserDto> searchUsers(@RequestBody SearchUserRequest searchUserRequest) {
-        List<UserDto> users = liferayUserService.searchUsers(searchUserRequest);
-        return users;
+    public ResponseEntity<List<UserDto>> searchUsers(@RequestBody SearchUserRequest request) {
+        return liferayUserService.searchUsers(request);
     }
 }
