@@ -26,16 +26,14 @@ public class LiferayUserService {
     }
 
 
-    public  ResponseEntity<UserDto> findUserById(Long userId) {
-        String incomandUrl = liferayConfigs.getUrl();
-        String url = incomandUrl + "/api/jsonws/user/get-user-by-id/user-id/" + userId;
+    public ResponseEntity<UserDto> findUserById(Long userId) {
+        String url = liferayConfigs.getUrl() + "/o/util-incomand-api/users/"+userId;
         try {
-            ResponseEntity<LiferayUserDto> response = liferayConfigs.liferayRestTemplate()
-                    .getForEntity(url, LiferayUserDto.class);
+            ResponseEntity<UserDto> response = liferayConfigs.liferayRestTemplate()
+                    .getForEntity(url, UserDto.class);
 
             if (response.getStatusCode().is2xxSuccessful() && response.getBody() != null) {
-                UserDto userDto = convertToUserDto(response.getBody());
-                return ResponseEntity.ok(userDto);
+                return response;
             }
             return ResponseEntity.notFound().build();
 
@@ -63,38 +61,5 @@ public class LiferayUserService {
         }
     }
 
-    public UserDto convertToUserDto(LiferayUserDto dto) {
-        var userDto = new UserDto();
-        if (dto == null) return userDto;
-        userDto.setUserId(Long.parseLong(dto.getUserId()));
-        userDto.setFirstName(dto.getFirstName());
-        userDto.setMiddleName(dto.getMiddleName());
-        userDto.setLastName(dto.getLastName());
-        userDto.setFullName(dto.getFullName());
-        userDto.setEmail(dto.getEmailAddress());
-        userDto.setPosition(dto.getJobTitle());
-        userDto.setPortraitUrl(dto.getPortraitId());
-        userDto.setPhone("");
-        return userDto;
-    }
 
-    public User convertDtoToUser(LiferayUserDto dto) {
-        var user = new User();
-        user.setUserIdFromCommonDb(Long.valueOf(dto.getUserId()));
-        user.setFirstName(dto.getFirstName());
-        user.setLastName(dto.getLastName());
-        user.setMiddleName(dto.getMiddleName());
-        user.setFullName(dto.getFullName());
-        user.setEmail(dto.getEmailAddress());
-        user.setPosition(dto.getJobTitle());
-        user.setPortraitUrl(dto.getPortraitId()); //todo
-        user.setPhone(dto.getPhone());
-        return user;
-    }
-
-
-    public void createUser(UserDto user) {
-        String url = "http://liferay.com/api/users";
-        liferayConfigs.liferayRestTemplate().postForObject(url, user, String.class);
-    }
 }

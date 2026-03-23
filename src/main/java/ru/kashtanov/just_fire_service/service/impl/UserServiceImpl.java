@@ -32,8 +32,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User findUserById(Long userId) {
-        int id = userId.intValue();
-        Optional<User> byId = userRepo.findById(id);
+        Optional<User> byId = userRepo.findById(userId);
         return byId.orElseThrow(() -> new UserNotFoundException("Пользователь не найден id: " + userId));
     }
 
