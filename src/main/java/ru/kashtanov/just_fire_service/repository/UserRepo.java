@@ -19,7 +19,7 @@ public interface UserRepo extends JpaRepository<User, Long> {
     List<User> findByFullNameContains(String fullName, Pageable pageable);
 
     @Query(value = "SELECT * FROM just_fire_users jfu " +
-            "WHERE jfu.user_id_from_common_db =: userId ", nativeQuery = true)
+            "WHERE jfu.user_id_from_common_db =:userId ", nativeQuery = true)
     Optional<User> findUserByCommonDbId(@Param("userId") Long userId);
 
 

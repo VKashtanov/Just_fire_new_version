@@ -21,28 +21,36 @@ import java.util.Optional;
 @Service
 public class GratitudeServiceImpl implements GratitudeService {
     private final GratitudeRepo gratitudeRepo;
-    private final LiferayUserService liferayUserService;
     private final UserService userService;
+    private final GratitudeRecipientService gratitudeRecipientService;
 
-    public GratitudeServiceImpl(GratitudeRepo gratitudeRepo, LiferayUserService liferayUserService, UserService userService) {
+    public GratitudeServiceImpl(GratitudeRepo gratitudeRepo, UserService userService, GratitudeRecipientService gratitudeRecipientService) {
         this.gratitudeRepo = gratitudeRepo;
-        this.liferayUserService = liferayUserService;
         this.userService = userService;
+        this.gratitudeRecipientService = gratitudeRecipientService;
     }
 
     @Override
     public Gratitude saveGratitude(GratitudeSaveDto dto) {
-        // 1. Check if the user is in the service DB
-        // if it's not ,use liferay Api go get user from the outer db
         try {
-            User localUser = userService.findUserById(dto.getAuthorId());
+            User user = userService.getOrCreate(dto.getAuthorId());
+            var gratitude = new Gratitude();
+            gratitude.setAuthor(user);
+            gratitude.setContent(dto.getContent());
+            Gratitude saved = gratitudeRepo.save(gratitude);
+
+            dto.getRecipientsIds().stream()
+                    .map(userService::getOrCreate)
+                    .forEach(recipient -> {
+                        var link = new GratitudeRecipient();
+                        link.setRecipient(recipient);
+                        link.setGratitude(saved);
+                        gratitudeRecipientService.createGratitudeRecipient(link);
+                    });
+            return saved;
         } catch (UserNotFoundException e) {
-//            UserDto userById = liferayUserService.findUserById(dto.getAuthorId());
-
-
+            throw new UserNotFoundException("User Not Found id: " + dto.getAuthorId());
         }
-
-        return gratitudeRepo.save(null);
     }
 
     @Override

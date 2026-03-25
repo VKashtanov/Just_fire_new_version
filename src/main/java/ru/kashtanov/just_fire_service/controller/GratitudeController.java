@@ -8,6 +8,7 @@ import ru.kashtanov.just_fire_service.dto.GratitudeDto;
 import ru.kashtanov.just_fire_service.dto.GratitudeSaveDto;
 import ru.kashtanov.just_fire_service.dto.UserDto;
 import ru.kashtanov.just_fire_service.dto.request.SearchUserRequest;
+import ru.kashtanov.just_fire_service.model.Gratitude;
 import ru.kashtanov.just_fire_service.service.GratitudeService;
 import ru.kashtanov.just_fire_service.service.impl.GratitudeServiceImpl;
 
@@ -28,8 +29,8 @@ private final GratitudeService gratitudeService;
 
     @PostMapping
     public String createGratitude(@RequestBody GratitudeSaveDto request) {
-        gratitudeService.saveGratitude(request);
-//        List<UserDto> users = liferayUserService.searchUsers(searchUserRequest);
+        Gratitude gratitude = gratitudeService.saveGratitude(request);
+
         return "users";
     }
 }

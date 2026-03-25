@@ -25,6 +25,7 @@ public class LiferayConfigs {
     @Bean
     public RestTemplate liferayRestTemplate() {
         var restTemplate = new RestTemplate();
+
         restTemplate.getInterceptors().add((request, body, execution) -> {
             String auth = username + ":" + password; // it's required for BasicAuth login:password
             byte[] encodedAuth = Base64.getEncoder().encode(auth.getBytes());
