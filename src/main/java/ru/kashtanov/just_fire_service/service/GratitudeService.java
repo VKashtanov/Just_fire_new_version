@@ -12,9 +12,17 @@ import java.util.Optional;
  */
 
 public interface GratitudeService {
-   public abstract Gratitude saveGratitude(GratitudeSaveDto dto);
-   public abstract List<GratitudeDto> findAllGratitudes();
-   public abstract List<GratitudeDto> findReceivedGratitudesByUser(Long userId);
-   public abstract List<GratitudeDto> findSentGratitudesByUser(Long userId);
-   public abstract Optional<GratitudeDto> findGratitudeById(Integer id);
+
+
+    public abstract GratitudeDto convertToDto(Gratitude gratitude);
+
+    public abstract Gratitude saveGratitude(GratitudeSaveDto dto);
+
+    public abstract List<GratitudeDto> findAllGratitudes();
+
+    public abstract List<GratitudeDto> findReceivedGratitudesByUser(Long userId);
+
+    public abstract List<GratitudeDto> findSentGratitudesByUser(Long userId);
+
+    public abstract Gratitude findGratitudeById(Long id);
 }

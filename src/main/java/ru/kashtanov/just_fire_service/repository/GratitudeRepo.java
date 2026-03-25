@@ -12,7 +12,7 @@ import java.util.List;
  * @author Viktor Кashtanov
  */
 @Repository
-public interface GratitudeRepo extends JpaRepository<Gratitude, Integer> {
+public interface GratitudeRepo extends JpaRepository<Gratitude, Long> {
 //    @Query("SELECT g FROM Gratitude g WHERE g.author.id=:userId")
 //    public List<Gratitude> findUserSentGratitudes(@Param("userId") Long userId);
 

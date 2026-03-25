@@ -6,6 +6,7 @@ import org.springframework.web.client.RestClientException;
 import ru.kashtanov.just_fire_service.configs.LiferayConfigs;
 import ru.kashtanov.just_fire_service.dto.UserDto;
 import ru.kashtanov.just_fire_service.dto.request.SearchUserRequest;
+import ru.kashtanov.just_fire_service.exception.UserNotFoundException;
 
 import java.util.*;
 
@@ -49,7 +50,7 @@ public class LiferayUserService {
                 return Arrays.asList(response.getBody());
             }
         } catch (RestClientException e) {
-            // TODO log
+            return Collections.emptyList();
         }
         return Collections.emptyList();
     }

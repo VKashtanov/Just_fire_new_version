@@ -40,18 +40,7 @@ public class UserController {
     @GetMapping("/test")
     public String test() {
         throw new UserNotFoundException("User not found in test");
-
     }
 
-    @ExceptionHandler(UserNotFoundException.class)
-    public ResponseEntity<ErrorResponse> handleUserNotFound(UserNotFoundException ex) {
-        return ResponseEntity
-                .status(404)
-                .body(ErrorResponse.builder()
-                        .timestamp(LocalDateTime.now())
-                        .status(404)
-                        .error("Not Found")
-                        .message(ex.getMessage())
-                        .build());
-    }
+
 }

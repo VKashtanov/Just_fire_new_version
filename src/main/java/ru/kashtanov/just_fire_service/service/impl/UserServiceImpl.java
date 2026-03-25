@@ -37,8 +37,6 @@ public class UserServiceImpl implements UserService {
                     User newUser = convertDtoToUser(userDto);
                     return createUser(newUser);
                 });
-
-
     }
 
     @Override

@@ -35,8 +35,9 @@ public class Gratitude {
     @OneToMany(mappedBy = "gratitude")
     private List<Like> likes;
 
-    @CreationTimestamp
-    @Column(name = "timestamp")
+
+
+    @Column(name = "timestamp", columnDefinition = "BIGINT")
     private Long timestamp;
 
     @Column(name = "content")
