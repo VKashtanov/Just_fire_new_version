@@ -23,7 +23,10 @@ import java.util.Objects;
 public class GratitudeRecipient {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "gratitudeRecipient_factory")
-    @SequenceGenerator(name = "gratitudeRecipient_factory", sequenceName = "gratitudeRecipient_factory_id_factory")
+    @SequenceGenerator(
+            name = "gratitudeRecipient_factory",
+            sequenceName = "gratitudeRecipient_factory_id_factory",
+            allocationSize = 1)
     @Column(name = "id")
     private Long id;
 

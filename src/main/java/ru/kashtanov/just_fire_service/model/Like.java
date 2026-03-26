@@ -22,7 +22,9 @@ import java.util.Objects;
 public class Like {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "like_factory")
-    @SequenceGenerator(name = "like_factory", sequenceName = "like_id_factory")
+    @SequenceGenerator(name = "like_factory",
+            sequenceName = "like_id_factory",
+            allocationSize = 1)
     @Column(name = "id")
     private Long id;
 
@@ -33,6 +35,9 @@ public class Like {
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
+
+    @Column(name = "timestamp", columnDefinition = "BIGINT")
+    private Long timestamp;
 
 
     @Override

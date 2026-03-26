@@ -5,8 +5,6 @@ import org.springframework.stereotype.Service;
 import ru.kashtanov.just_fire_service.dto.GratitudeDto;
 import ru.kashtanov.just_fire_service.dto.GratitudeSaveDto;
 import ru.kashtanov.just_fire_service.dto.UserDto;
-import ru.kashtanov.just_fire_service.exception.GratitudeInvalidException;
-import ru.kashtanov.just_fire_service.exception.UserNotFoundException;
 import ru.kashtanov.just_fire_service.model.Gratitude;
 import ru.kashtanov.just_fire_service.model.User;
 import ru.kashtanov.just_fire_service.model.join.GratitudeRecipient;
@@ -27,10 +25,18 @@ public class GratitudeServiceImpl implements GratitudeService {
     private final UserService userService;
     private final GratitudeRecipientService gratitudeRecipientService;
 
+
     public GratitudeServiceImpl(GratitudeRepo gratitudeRepo, UserService userService, GratitudeRecipientService gratitudeRecipientService) {
         this.gratitudeRepo = gratitudeRepo;
         this.userService = userService;
         this.gratitudeRecipientService = gratitudeRecipientService;
+
+    }
+
+    @Override
+    public GratitudeDto createGratitude(GratitudeSaveDto dto) {
+        Gratitude gratitude = saveGratitude(dto);
+        return convertToDto(gratitude);
     }
 
 
@@ -80,11 +86,13 @@ public class GratitudeServiceImpl implements GratitudeService {
         return gratitudes.stream().map(this::convertToDto).toList();
     }
 
+    public Optional<Gratitude> findGratitudeInRepoById(Long id) {
+        return gratitudeRepo.findById(id);
+    }
 
     @Override
-    public Gratitude findGratitudeById(Long id) {
-        //todo add processing errors
-        return gratitudeRepo.findById(id).orElseThrow(() -> new RuntimeException());
+    public Optional<GratitudeDto> findGratitudeById(Long id) {
+        return gratitudeRepo.findById(id).map(this::convertToDto);
     }
 
     @Override

@@ -19,7 +19,9 @@ import java.util.Objects;
 public class SiteConfig {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "config_factory")
-    @SequenceGenerator(name = "config_factory", sequenceName = "config_id_factory")
+    @SequenceGenerator(name = "config_factory",
+            sequenceName = "config_id_factory",
+            allocationSize = 1)
     @Column(name = "id")
     private Long id;
 
@@ -32,7 +34,7 @@ public class SiteConfig {
     @Column(name = "siteResponsible_id")
     private Long siteResponsible;
 
-    public SiteConfig(Long siteId,Long generalDirector, Long siteResponsible) {
+    public SiteConfig(Long siteId, Long generalDirector, Long siteResponsible) {
         this.siteId = siteId;
         this.generalDirector = generalDirector;
         this.siteResponsible = siteResponsible;
@@ -53,7 +55,7 @@ public class SiteConfig {
     @Override
     public String toString() {
         return "SiteConfig{" +
-                "id=" + id+
+                "id=" + id +
                 '}';
     }
 }

@@ -13,6 +13,7 @@ import ru.kashtanov.just_fire_service.service.impl.GratitudeServiceImpl;
 
 import java.net.URI;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * @author Viktor Кashtanov
@@ -29,20 +30,18 @@ public class GratitudeController {
 
     @PostMapping
     public ResponseEntity<GratitudeDto> createGratitude(@RequestBody GratitudeSaveDto request) {
-        Gratitude gratitude = gratitudeService.saveGratitude(request);
-        GratitudeDto dto = gratitudeService.convertToDto(gratitude);
+        GratitudeDto dto = gratitudeService.createGratitude(request);
         URI location = URI.create("/api/gratitudes/" + dto.getId());
         return ResponseEntity
                 .created(location)
                 .body(dto);
     }
 
-    @GetMapping("/{userId}")
-    public Gratitude findGratitude(@PathVariable Long userId) {
-        Gratitude gratitudeById = gratitudeService.findGratitudeById(userId);
-        System.out.println("find gratitude by id: " + gratitudeById);
-
-        return gratitudeService.findGratitudeById(userId);
+    @GetMapping("/{gratitudeId}")
+    public ResponseEntity<GratitudeDto> findGratitude(@PathVariable Long gratitudeId) {
+        Optional<GratitudeDto> gratitudeById = gratitudeService.findGratitudeById(gratitudeId);
+        return gratitudeById.map(ResponseEntity::ok)
+                .orElseGet(() -> ResponseEntity.notFound().build());
 
     }
 }

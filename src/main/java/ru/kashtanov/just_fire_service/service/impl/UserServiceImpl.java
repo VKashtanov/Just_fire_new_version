@@ -25,7 +25,9 @@ public class UserServiceImpl implements UserService {
     }
 
     public User createUser(User user) {
-        return userRepo.save(user);
+        System.out.println("Creating new user: " + user);
+        User save = userRepo.save(user);
+        return save;
     }
 
     public User getOrCreate(Long userId) {
@@ -33,8 +35,9 @@ public class UserServiceImpl implements UserService {
         return findUserByCommonDbId(userId)
                 .orElseGet(() -> {
                     UserDto userDto = liferayUserService.fetchUserById(userId)
-                            .orElseThrow(() -> new UserNotFoundException("User not found in Liferay: " + userId));
+                            .orElseThrow(() -> new UserNotFoundException("User is not found in Incomand DB with id: " + userId));
                     User newUser = convertDtoToUser(userDto);
+
                     return createUser(newUser);
                 });
     }

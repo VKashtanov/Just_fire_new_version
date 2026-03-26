@@ -1,5 +1,6 @@
 package ru.kashtanov.just_fire_service.exception;
 
+
 import lombok.Getter;
 import org.springframework.http.HttpStatus;
 
@@ -14,5 +15,6 @@ public class GratitudeInvalidException extends RuntimeException {
         super(message);
         this.status = status;
     }
+
 
 }

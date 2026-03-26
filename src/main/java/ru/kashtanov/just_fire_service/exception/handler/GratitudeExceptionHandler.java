@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import ru.kashtanov.just_fire_service.dto.response.ErrorResponse;
 import ru.kashtanov.just_fire_service.exception.GratitudeInvalidException;
+import ru.kashtanov.just_fire_service.exception.GratitudeNotFoundException;
 
 import java.time.LocalDateTime;
 
@@ -19,9 +20,8 @@ import static ru.kashtanov.just_fire_service.exception.constants.HandlerOrder.GR
 @Order(GRATITUDE_HANDLER_ORDER)
 public class GratitudeExceptionHandler {
 
-    @ExceptionHandler(GratitudeInvalidException.class)
-    public ResponseEntity<ErrorResponse> handleInvalidGratitude(GratitudeInvalidException e) {
-        // 400 Bad Request
+    @ExceptionHandler(GratitudeNotFoundException.class)
+    public ResponseEntity<ErrorResponse> handleInvalidGratitude(GratitudeNotFoundException e) {
         return ResponseEntity
                 .status(404)
                 .body(ErrorResponse.builder()
