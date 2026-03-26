@@ -1,15 +1,10 @@
 package ru.kashtanov.just_fire_service.controller;
 
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.kashtanov.just_fire_service.dto.GratitudeDto;
 import ru.kashtanov.just_fire_service.dto.GratitudeSaveDto;
-import ru.kashtanov.just_fire_service.dto.UserDto;
-import ru.kashtanov.just_fire_service.dto.request.SearchUserRequest;
-import ru.kashtanov.just_fire_service.model.Gratitude;
 import ru.kashtanov.just_fire_service.service.GratitudeService;
-import ru.kashtanov.just_fire_service.service.impl.GratitudeServiceImpl;
 
 import java.net.URI;
 import java.util.List;
@@ -43,5 +38,12 @@ public class GratitudeController {
         return gratitudeById.map(ResponseEntity::ok)
                 .orElseGet(() -> ResponseEntity.notFound().build());
 
+    }
+
+    @GetMapping()
+    public List<GratitudeDto> getAll(@RequestParam(defaultValue = "20") int limit,
+                                           @RequestParam(defaultValue = "0") int offset)
+    {
+        return gratitudeService.findAllGratitudes(limit, offset);
     }
 }

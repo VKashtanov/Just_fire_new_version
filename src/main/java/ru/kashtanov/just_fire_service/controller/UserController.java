@@ -37,6 +37,21 @@ public class UserController {
         return userService.searchUsersByKeyword(request);
     }
 
+    @GetMapping("/top-thankers")
+    public List<UserDto> findTopThankers(@RequestParam(defaultValue = "20") int limit,
+                                         @RequestParam(defaultValue = "0") int offset){
+        System.out.println();
+        return userService.findTopThankers(limit, offset);
+    }
+
+    @GetMapping("/thanked-most-of-all")
+    public List<UserDto> findGratitudeReceivers(@RequestParam(defaultValue = "20") int limit,
+                                         @RequestParam(defaultValue = "0") int offset){
+        System.out.println();
+        return userService.findTopGratitudeReceivers(limit, offset);
+    }
+
+
     @GetMapping("/test")
     public String test() {
         throw new UserNotFoundException("User not found in test");

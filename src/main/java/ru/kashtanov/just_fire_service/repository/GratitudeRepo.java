@@ -13,18 +13,24 @@ import java.util.List;
  */
 @Repository
 public interface GratitudeRepo extends JpaRepository<Gratitude, Long> {
-//    @Query("SELECT g FROM Gratitude g WHERE g.author.id=:userId")
-//    public List<Gratitude> findUserSentGratitudes(@Param("userId") Long userId);
+
+
+    @Query(value = "SELECT * FROM gratitudes ORDER BY timestamp DESC LIMIT :limit OFFSET :offset",
+            nativeQuery = true)
+    List<Gratitude> findPageableGratitudes(@Param("limit") int limit, @Param("offset") int offset);
+
 
     @Query(value =
-            "SELECT * FROM gratitudes g "  +
-            "JOIN gratitude_recipients gr "+
-            "ON g.id = gr.gratitude_id "   +
-            "WHERE gr.recipient_id=:userId",nativeQuery = true)
+            "SELECT * FROM gratitudes g " +
+                    "JOIN gratitude_recipients gr " +
+                    "ON g.id = gr.gratitude_id " +
+                    "WHERE gr.recipient_id=:userId " +
+                    "ORDER BY timestamp DESC LIMIT :limit OFFSET :offset", nativeQuery = true)
     public abstract List<Gratitude> findUserReceivedGratitudesNative(@Param("userId") Long userId);
 
 
-    @Query(value = "SELECT * FROM gratitudes WHERE author_id=:userId",nativeQuery = true)
+    @Query(value = "SELECT * FROM gratitudes WHERE author_id=:userId " +
+            "ORDER BY timestamp DESC LIMIT :limit OFFSET :offset", nativeQuery = true)
     public abstract List<Gratitude> findUserSentGratitudesNative(@Param("userId") Long userId);
 
 }

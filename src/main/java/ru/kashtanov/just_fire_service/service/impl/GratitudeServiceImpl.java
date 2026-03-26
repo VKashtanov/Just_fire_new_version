@@ -67,10 +67,9 @@ public class GratitudeServiceImpl implements GratitudeService {
     }
 
     @Override
-    public List<GratitudeDto> findAllGratitudes() {
-        List<Gratitude> all = gratitudeRepo.findAll();
+    public List<GratitudeDto> findAllGratitudes(int limit, int offset) {
+        List<Gratitude> all = gratitudeRepo.findPageableGratitudes(limit, offset);
         return all.stream().map(this::convertToDto).toList();
-
     }
 
     @Override
@@ -95,6 +94,7 @@ public class GratitudeServiceImpl implements GratitudeService {
         return gratitudeRepo.findById(id).map(this::convertToDto);
     }
 
+
     @Override
     public GratitudeDto convertToDto(Gratitude gratitude) {
         var dto = new GratitudeDto();
@@ -104,7 +104,7 @@ public class GratitudeServiceImpl implements GratitudeService {
 
         UserDto authorDto = userService.buildUserDto(gratitude.getAuthor());
         dto.setAuthor(authorDto);
-
+        dto.setLikesCount(gratitude.getLikes().size());
         List<UserDto> recipients = buildRecipientsDto(gratitude.getRecipientLinks());
         dto.setRecipients(recipients);
         return dto;

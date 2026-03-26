@@ -1,7 +1,5 @@
 package ru.kashtanov.just_fire_service.service.impl;
 
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import ru.kashtanov.just_fire_service.dto.UserDto;
 import ru.kashtanov.just_fire_service.dto.request.SearchUserRequest;
@@ -9,7 +7,6 @@ import ru.kashtanov.just_fire_service.exception.UserNotFoundException;
 import ru.kashtanov.just_fire_service.model.User;
 import ru.kashtanov.just_fire_service.repository.UserRepo;
 import ru.kashtanov.just_fire_service.service.UserService;
-import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 import java.util.Optional;
@@ -25,9 +22,7 @@ public class UserServiceImpl implements UserService {
     }
 
     public User createUser(User user) {
-        System.out.println("Creating new user: " + user);
-        User save = userRepo.save(user);
-        return save;
+        return userRepo.save(user);
     }
 
     public User getOrCreate(Long userId) {
@@ -41,6 +36,21 @@ public class UserServiceImpl implements UserService {
                     return createUser(newUser);
                 });
     }
+
+
+    public List<UserDto> findTopThankers(int limit, int offset) {
+        return userRepo.findTopThanksGivers(limit, offset)
+                .stream()
+                .map(this::buildUserDto)
+                .toList();
+    }
+    public List<UserDto> findTopGratitudeReceivers(int limit, int offset) {
+        return userRepo.findTopGratitudeRecipients(limit, offset)
+                .stream()
+                .map(this::buildUserDto)
+                .toList();
+    }
+
 
     @Override
     public UserDto getOrCreateUserDto(Long userId) {

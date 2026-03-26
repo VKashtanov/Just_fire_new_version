@@ -11,6 +11,10 @@ import java.util.Optional;
  * @author Viktor Кashtanov
  */
 public interface UserService {
+    public abstract List<UserDto> findTopGratitudeReceivers(int limit, int offset);
+
+    public abstract List<UserDto> findTopThankers(int limit, int offset);
+
     public abstract List<UserDto> searchUsersByKeyword(SearchUserRequest request);
 
     public abstract UserDto getOrCreateUserDto(Long userId);
@@ -24,7 +28,6 @@ public interface UserService {
     public abstract User convertDtoToUser(UserDto dto);
 
     public abstract User createUser(User user);
-
 
     public abstract UserDto buildUserDto(User user);
 }

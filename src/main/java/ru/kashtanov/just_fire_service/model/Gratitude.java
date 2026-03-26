@@ -7,6 +7,7 @@ import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
 import ru.kashtanov.just_fire_service.model.join.GratitudeRecipient;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -35,7 +36,7 @@ public class Gratitude {
     private List<GratitudeRecipient> recipientLinks;
 
     @OneToMany(mappedBy = "gratitude")
-    private List<Like> likes;
+    private List<Like> likes = new ArrayList<>(); // since upon creation there may be no likes
 
 
 

@@ -18,4 +18,5 @@ public class GratitudeDto {
     private Long timestamp;
     private UserDto author;
     private List<UserDto> recipients;
+    private int likesCount;
 }
