@@ -4,9 +4,13 @@ import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClientException;
 import ru.kashtanov.just_fire_service.configs.LiferayConfigs;
+
+import ru.kashtanov.just_fire_service.dto.GratitudeSaveDto;
 import ru.kashtanov.just_fire_service.dto.UserDto;
+import ru.kashtanov.just_fire_service.dto.liferay_dto.GratitudeSendRequestDto;
+import ru.kashtanov.just_fire_service.dto.liferay_dto.UserResponseDto;
 import ru.kashtanov.just_fire_service.dto.request.SearchUserRequest;
-import ru.kashtanov.just_fire_service.exception.UserNotFoundException;
+
 
 import java.util.*;
 
@@ -37,6 +41,7 @@ public class LiferayUserService {
 
 
     public List<UserDto> searchUsers(SearchUserRequest searchUserRequest) {
+        System.out.println("searchUsers: " + searchUserRequest);
         String url = liferayConfigs.getUrl() + "/o/util-incomand-api/users/_search";
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
@@ -53,5 +58,42 @@ public class LiferayUserService {
             return Collections.emptyList();
         }
         return Collections.emptyList();
+    }
+
+    // ===========  FOR INCOMAND ==========================
+    public List<UserDto> searchUsersByKeyword(String keyword) {
+        SearchUserRequest request = new SearchUserRequest();
+        request.setKeyword(keyword);
+        request.setCompanyId(20097L);
+        request.setLimit(20);
+        request.setOffset(0);
+        return searchUsers(request);
+    }
+
+    public UserResponseDto convertToResponseDto(UserDto dto) {
+        var response = new UserResponseDto();
+        response.setFirstName(dto.getFirstName());
+        response.setLastName(dto.getLastName());
+        response.setPortraitUrl(dto.getPortraitUrl());
+        response.setFullName(dto.getFullName());
+        response.setPosition(dto.getPosition());
+        response.setUserId(String.valueOf(dto.getUserId()));
+        response.setEmail(dto.getEmail());
+        return response;
+    }
+
+    public GratitudeSaveDto convertToSaveDto(GratitudeSendRequestDto request) {
+        var dto =  new GratitudeSaveDto();
+
+        dto.setAuthorId(request.getSenderUserId());
+
+        List<Long> recipientIds = request.getRecipients().stream()
+                .map(r -> Long.parseLong(r.getUserId()))
+                .toList();
+        dto.setRecipientsIds(recipientIds);
+
+
+        dto.setContent(request.getComment());
+        return dto;
     }
 }

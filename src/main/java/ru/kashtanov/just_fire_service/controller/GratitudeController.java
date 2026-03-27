@@ -14,7 +14,7 @@ import java.util.Optional;
  * @author Viktor Кashtanov
  */
 @RestController
-@RequestMapping("/api/gratitudes")
+@RequestMapping("/api/grats")
 public class GratitudeController {
     private final GratitudeService gratitudeService;
 
@@ -42,7 +42,7 @@ public class GratitudeController {
 
     @GetMapping()
     public List<GratitudeDto> getAll(@RequestParam(defaultValue = "20") int limit,
-                                           @RequestParam(defaultValue = "0") int offset)
+                                     @RequestParam(defaultValue = "0") int offset)
     {
         return gratitudeService.findAllGratitudes(limit, offset);
     }
