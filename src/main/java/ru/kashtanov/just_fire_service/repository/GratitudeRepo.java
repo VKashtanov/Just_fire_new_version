@@ -17,20 +17,25 @@ public interface GratitudeRepo extends JpaRepository<Gratitude, Long> {
 
     @Query(value = "SELECT * FROM gratitudes ORDER BY timestamp DESC LIMIT :limit OFFSET :offset",
             nativeQuery = true)
-    List<Gratitude> findPageableGratitudes(@Param("limit") int limit, @Param("offset") int offset);
+    List<Gratitude> findPageableGratitudes(@Param("limit") int limit,
+                                           @Param("offset") int offset);
 
 
     @Query(value =
-            "SELECT * FROM gratitudes g " +
+            "SELECT g.* FROM gratitudes g " +
                     "JOIN gratitude_recipients gr " +
                     "ON g.id = gr.gratitude_id " +
                     "WHERE gr.recipient_id=:userId " +
                     "ORDER BY timestamp DESC LIMIT :limit OFFSET :offset", nativeQuery = true)
-    public abstract List<Gratitude> findUserReceivedGratitudesNative(@Param("userId") Long userId);
+    public abstract List<Gratitude> findUserReceivedGratitudesNative(@Param("userId") Long userId,
+                                                                     @Param("limit") int limit,
+                                                                     @Param("offset") int offset);
 
 
-    @Query(value = "SELECT * FROM gratitudes WHERE author_id=:userId " +
+    @Query(value = "SELECT * FROM gratitudes WHERE author_id = :userId " +
             "ORDER BY timestamp DESC LIMIT :limit OFFSET :offset", nativeQuery = true)
-    public abstract List<Gratitude> findUserSentGratitudesNative(@Param("userId") Long userId);
+    List<Gratitude> findUserSentGratitudesNative(@Param("userId") Long userId,
+                                                 @Param("limit") int limit,
+                                                 @Param("offset") int offset);
 
 }

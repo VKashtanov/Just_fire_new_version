@@ -53,9 +53,10 @@ public class LiferayController {
         int page = request.getPageAsInt();
         int pageSize = request.getPageSizeAsInt();
         int offset = (page - 1) * pageSize;
-
-        List<GratitudeDto> allGratitudes = gratitudeService.findAllGratitudes(pageSize, offset);
-        List<GratitudeDto> nextPage = gratitudeService.findAllGratitudes(pageSize, offset + pageSize);
+        String filter = request.getFilter();
+        Long userId = request.getUserId();
+        List<GratitudeDto> allGratitudes = gratitudeService.findAllGratitudes(userId,pageSize, offset,filter);
+        List<GratitudeDto> nextPage = gratitudeService.findAllGratitudes(userId,pageSize, offset + pageSize,filter);
         boolean hasMore = !nextPage.isEmpty();
 
         GratitudePageResponse dto = mapper.toPageResponse(allGratitudes, page, pageSize, hasMore);

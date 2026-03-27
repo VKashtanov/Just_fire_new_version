@@ -2,6 +2,7 @@ package ru.kashtanov.just_fire_service.service;
 
 import ru.kashtanov.just_fire_service.dto.GratitudeDto;
 import ru.kashtanov.just_fire_service.dto.GratitudeSaveDto;
+import ru.kashtanov.just_fire_service.enums.GratitudeFilterType;
 import ru.kashtanov.just_fire_service.model.Gratitude;
 
 import java.util.List;
@@ -22,11 +23,11 @@ public interface GratitudeService {
 
     public abstract Gratitude saveGratitude(GratitudeSaveDto dto);
 
-    public List<GratitudeDto> findAllGratitudes(int limit, int offset);
+    public List<GratitudeDto> findAllGratitudes(long userId,int limit, int offset, String filter);
 
-    public abstract List<GratitudeDto> findReceivedGratitudesByUser(Long userId);
+    public abstract List<GratitudeDto> findReceivedGratitudesByUser(Long userId,int limit, int offset);
 
-    public abstract List<GratitudeDto> findSentGratitudesByUser(Long userId);
+    public abstract List<GratitudeDto> findSentGratitudesByUser(Long userId,int limit, int offset);
 
     public abstract Optional<GratitudeDto> findGratitudeById(Long id);
 }

@@ -1,10 +1,10 @@
 package ru.kashtanov.just_fire_service.service.impl;
 
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import ru.kashtanov.just_fire_service.dto.GratitudeDto;
 import ru.kashtanov.just_fire_service.dto.GratitudeSaveDto;
 import ru.kashtanov.just_fire_service.dto.UserDto;
+import ru.kashtanov.just_fire_service.enums.GratitudeFilterType;
 import ru.kashtanov.just_fire_service.model.Gratitude;
 import ru.kashtanov.just_fire_service.model.User;
 import ru.kashtanov.just_fire_service.model.join.GratitudeRecipient;
@@ -67,21 +67,32 @@ public class GratitudeServiceImpl implements GratitudeService {
     }
 
     @Override
-    public List<GratitudeDto> findAllGratitudes(int limit, int offset) {
-        List<Gratitude> all = gratitudeRepo.findPageableGratitudes(limit, offset);
-        return all.stream().map(this::convertToDto).toList();
+    public List<GratitudeDto> findAllGratitudes(long userId, int limit, int offset, String filter) {
+        List<Gratitude> gratitudes = new ArrayList<>();
+        GratitudeFilterType filterType = parseFilter(filter);
+        User user = userService.getOrCreate(userId);
+        userId = user.getId();
+        switch (filterType) {
+            case ALL -> gratitudes = gratitudeRepo.findPageableGratitudes(limit, offset);
+            case SENT ->gratitudes = gratitudeRepo.findUserSentGratitudesNative(userId, limit, offset);
+            case RECEIVED -> gratitudes = gratitudeRepo.findUserReceivedGratitudesNative(userId, limit, offset);
+        }
+
+        return gratitudes.stream()
+                .map(this::convertToDto)
+                .toList();
     }
 
     @Override
-    public List<GratitudeDto> findReceivedGratitudesByUser(Long userId) {
-        List<Gratitude> gratitudes = gratitudeRepo.findUserReceivedGratitudesNative(userId);
+    public List<GratitudeDto> findReceivedGratitudesByUser(Long userId, int limit, int offset) {
+        List<Gratitude> gratitudes = gratitudeRepo.findUserReceivedGratitudesNative(userId, limit, offset);
         return gratitudes.stream().map(this::convertToDto).toList();
 
     }
 
     @Override
-    public List<GratitudeDto> findSentGratitudesByUser(Long userId) {
-        List<Gratitude> gratitudes = gratitudeRepo.findUserSentGratitudesNative(userId);
+    public List<GratitudeDto> findSentGratitudesByUser(Long userId, int limit, int offset) {
+        List<Gratitude> gratitudes = gratitudeRepo.findUserSentGratitudesNative(userId, limit, offset);
         return gratitudes.stream().map(this::convertToDto).toList();
     }
 
@@ -120,4 +131,16 @@ public class GratitudeServiceImpl implements GratitudeService {
                 .map(userService::buildUserDto)
                 .toList();
     }
+
+    private GratitudeFilterType parseFilter(String filter) {
+        if (filter == null) return GratitudeFilterType.ALL;
+
+        try {
+            return GratitudeFilterType.valueOf(filter.toUpperCase());
+        } catch (IllegalArgumentException e) {
+            return GratitudeFilterType.ALL;  // по умолчанию
+        }
+    }
+
+
 }

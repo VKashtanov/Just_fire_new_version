@@ -4,6 +4,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.kashtanov.just_fire_service.dto.GratitudeDto;
 import ru.kashtanov.just_fire_service.dto.GratitudeSaveDto;
+import ru.kashtanov.just_fire_service.enums.GratitudeFilterType;
 import ru.kashtanov.just_fire_service.service.GratitudeService;
 
 import java.net.URI;
@@ -44,6 +45,8 @@ public class GratitudeController {
     public List<GratitudeDto> getAll(@RequestParam(defaultValue = "20") int limit,
                                      @RequestParam(defaultValue = "0") int offset)
     {
-        return gratitudeService.findAllGratitudes(limit, offset);
+        String all = GratitudeFilterType.ALL.getType();
+        //todo ponder of changing endpoint dto processing , might be turn to POST
+        return gratitudeService.findAllGratitudes(1,limit, offset,all);
     }
 }

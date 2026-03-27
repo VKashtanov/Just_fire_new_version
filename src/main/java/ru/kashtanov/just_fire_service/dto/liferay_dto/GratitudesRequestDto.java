@@ -7,11 +7,11 @@ import lombok.Data;
  */
 @Data
 public class GratitudesRequestDto {
-    private String siteId;
+    private Long siteId;
     private Integer page;
     private Integer pageSize;
     private String filter;
-    private String userId;
+    private Long userId;
 
     public int getPageAsInt() {
         return page != null ?  page : 1;
@@ -22,10 +22,10 @@ public class GratitudesRequestDto {
     }
 
     public long getSiteIdAsLong() {
-        return siteId != null ? Long.parseLong(siteId) : 0;
+        return siteId != null ? siteId : 0;
     }
 
     public long getUserIdAsLong() {
-        return userId != null ? Long.parseLong(userId) : 0;
+        return userId != null ? userId : 0;
     }
 }
