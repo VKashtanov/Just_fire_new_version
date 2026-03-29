@@ -9,8 +9,7 @@ import ru.kashtanov.just_fire_service.exception.UserNotFoundException;
 
 import java.time.LocalDateTime;
 
-import static ru.kashtanov.just_fire_service.exception.constants.HandlerOrder.GRATITUDE_HANDLER_ORDER;
-import static ru.kashtanov.just_fire_service.exception.constants.HandlerOrder.USER_HANDLER_ORDER;
+import static ru.kashtanov.just_fire_service.constants.HandlerOrder.USER_HANDLER_ORDER;
 
 /**
  * @author Viktor Кashtanov

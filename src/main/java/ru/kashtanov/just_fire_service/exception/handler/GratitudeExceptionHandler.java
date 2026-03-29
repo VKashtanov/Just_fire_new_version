@@ -6,12 +6,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import ru.kashtanov.just_fire_service.dto.response.ErrorResponse;
-import ru.kashtanov.just_fire_service.exception.GratitudeInvalidException;
 import ru.kashtanov.just_fire_service.exception.GratitudeNotFoundException;
 
 import java.time.LocalDateTime;
 
-import static ru.kashtanov.just_fire_service.exception.constants.HandlerOrder.GRATITUDE_HANDLER_ORDER;
+import static ru.kashtanov.just_fire_service.constants.HandlerOrder.GRATITUDE_HANDLER_ORDER;
 
 /**
  * @author Viktor Кashtanov
@@ -30,5 +29,5 @@ public class GratitudeExceptionHandler {
                         .error("Not Found")
                         .message(e.getMessage())
                         .build());
-        }
+    }
 }

@@ -1,6 +1,7 @@
 package ru.kashtanov.just_fire_service.service;
 
 import ru.kashtanov.just_fire_service.dto.UserDto;
+import ru.kashtanov.just_fire_service.dto.liferay_dto.TopThankersResponseDto;
 import ru.kashtanov.just_fire_service.dto.request.SearchUserRequest;
 import ru.kashtanov.just_fire_service.model.User;
 
@@ -11,9 +12,10 @@ import java.util.Optional;
  * @author Viktor Кashtanov
  */
 public interface UserService {
+    public abstract TopThankersResponseDto findThankGivers(int limit, int offset);
     public abstract List<UserDto> findTopGratitudeReceivers(int limit, int offset);
 
-    public abstract List<UserDto> findTopThankers(int limit, int offset);
+    public abstract TopThankersResponseDto findThanksReceivers(int limit, int offset);
 
     public abstract List<UserDto> searchUsersByKeyword(SearchUserRequest request);
 

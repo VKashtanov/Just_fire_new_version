@@ -1,18 +1,13 @@
 package ru.kashtanov.just_fire_service.controller;
 
 import jakarta.validation.Valid;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 
 import org.springframework.web.bind.annotation.*;
 import ru.kashtanov.just_fire_service.dto.UserDto;
 import ru.kashtanov.just_fire_service.dto.request.SearchUserRequest;
-import ru.kashtanov.just_fire_service.dto.response.ErrorResponse;
 import ru.kashtanov.just_fire_service.exception.UserNotFoundException;
 import ru.kashtanov.just_fire_service.service.UserService;
-import ru.kashtanov.just_fire_service.service.impl.LiferayUserService;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 /**
@@ -22,6 +17,7 @@ import java.util.List;
 @RequestMapping("/api/users")
 public class UserController {
     private final UserService userService;
+
     public UserController(UserService userService) {
         this.userService = userService;
     }
@@ -39,14 +35,14 @@ public class UserController {
 
     @GetMapping("/top-thankers")
     public List<UserDto> findTopThankers(@RequestParam(defaultValue = "20") int limit,
-                                         @RequestParam(defaultValue = "0") int offset){
-        System.out.println();
-        return userService.findTopThankers(limit, offset);
+                                         @RequestParam(defaultValue = "0") int offset) {
+// TODO make the method well
+        return null;
     }
 
     @GetMapping("/thanked-most-of-all")
     public List<UserDto> findGratitudeReceivers(@RequestParam(defaultValue = "20") int limit,
-                                         @RequestParam(defaultValue = "0") int offset){
+                                                @RequestParam(defaultValue = "0") int offset) {
         System.out.println();
         return userService.findTopGratitudeReceivers(limit, offset);
     }

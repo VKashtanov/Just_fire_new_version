@@ -1,7 +1,11 @@
 package ru.kashtanov.just_fire_service.service.impl;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import org.springframework.stereotype.Service;
 import ru.kashtanov.just_fire_service.dto.UserDto;
+import ru.kashtanov.just_fire_service.dto.liferay_dto.TopThankerUserDto;
+import ru.kashtanov.just_fire_service.dto.liferay_dto.TopThankersResponseDto;
+import ru.kashtanov.just_fire_service.dto.liferay_dto.UserThankStatsDto;
 import ru.kashtanov.just_fire_service.dto.request.SearchUserRequest;
 import ru.kashtanov.just_fire_service.exception.UserNotFoundException;
 import ru.kashtanov.just_fire_service.model.User;
@@ -10,6 +14,7 @@ import ru.kashtanov.just_fire_service.service.UserService;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -19,6 +24,19 @@ public class UserServiceImpl implements UserService {
     public UserServiceImpl(UserRepo userRepo, LiferayUserService liferayUserService) {
         this.userRepo = userRepo;
         this.liferayUserService = liferayUserService;
+    }
+
+    private static TopThankerUserDto rebuild(TopThankerUserDto s) {
+        return new TopThankerUserDto(
+                s.getUserId(),
+                s.getFirstName(),
+                s.getLastName(),
+                s.getFullName(),
+                s.getEmail(),
+                s.getPosition(),
+                s.getPortraitUrl(),
+                s.getThankedQty(),
+                s.getWasThankedQty());
     }
 
     public User createUser(User user) {
@@ -38,17 +56,35 @@ public class UserServiceImpl implements UserService {
     }
 
 
-    public List<UserDto> findTopThankers(int limit, int offset) {
-        return userRepo.findTopThanksGivers(limit, offset)
-                .stream()
-                .map(this::buildUserDto)
+    public TopThankersResponseDto findThankGivers(int limit, int offset) {
+        List<TopThankerUserDto> stats = userRepo.findTopThanksGivers(limit, offset);
+        var responseDto = new TopThankersResponseDto();
+        List<TopThankerUserDto> list = stats.stream()
+                .map(UserServiceImpl::rebuild)
                 .toList();
+        responseDto.setUsers(list);
+        responseDto.setStatus("success");
+        responseDto.setStatsType("top-thankers");
+        return responseDto;
+
     }
+
+
+        public TopThankersResponseDto findThanksReceivers(int limit, int offset) {
+            List<TopThankerUserDto> stats = userRepo.findTopGratitudeRecipients(limit, offset);
+            List<TopThankerUserDto> list = stats.stream()
+                    .map(UserServiceImpl::rebuild)
+                    .toList();
+            var responseDto = new TopThankersResponseDto();
+            responseDto.setStatsType("top-recipients");  // ← другой тип!
+            responseDto.setUsers(list);
+            responseDto.setStatus("success");
+
+            return responseDto;
+        }
+
     public List<UserDto> findTopGratitudeReceivers(int limit, int offset) {
-        return userRepo.findTopGratitudeRecipients(limit, offset)
-                .stream()
-                .map(this::buildUserDto)
-                .toList();
+       return null;
     }
 
 

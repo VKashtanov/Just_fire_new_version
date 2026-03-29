@@ -1,15 +1,12 @@
 package ru.kashtanov.just_fire_service.controller;
 
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import ru.kashtanov.just_fire_service.components.GratitudeToLiferayMapper;
 import ru.kashtanov.just_fire_service.dto.*;
 import ru.kashtanov.just_fire_service.dto.liferay_dto.*;
 import ru.kashtanov.just_fire_service.service.GratitudeService;
-import ru.kashtanov.just_fire_service.service.LikeService;
+import ru.kashtanov.just_fire_service.service.UserService;
 import ru.kashtanov.just_fire_service.service.impl.LiferayUserService;
 import ru.kashtanov.just_fire_service.service.impl.LikeServiceImpl;
 
@@ -20,20 +17,23 @@ import java.util.List;
  * @author Viktor Кashtanov
  */
 @RestController
-@RequestMapping("/api/gratitudes")
+@RequestMapping("/api/gratitude")
 public class LiferayController {
 
     private final GratitudeService gratitudeService;
     private final GratitudeToLiferayMapper mapper;
     private final LiferayUserService liferayUserService;
     private final LikeServiceImpl likeService;
+    private final UserService userService;
 
-    public LiferayController(GratitudeService gratitudeService, GratitudeToLiferayMapper mapper, LiferayUserService liferayUserService, LikeServiceImpl likeService) {
+    public LiferayController(GratitudeService gratitudeService, GratitudeToLiferayMapper mapper, LiferayUserService liferayUserService, LikeServiceImpl likeService, UserService userService) {
         this.gratitudeService = gratitudeService;
         this.mapper = mapper;
         this.liferayUserService = liferayUserService;
         this.likeService = likeService;
+        this.userService = userService;
     }
+
 
     @PostMapping("/send")
     public ResponseEntity<GratitudeSendResponseDto> sendGratitude(@RequestBody GratitudeSendRequestDto request) {
@@ -55,8 +55,8 @@ public class LiferayController {
         int offset = (page - 1) * pageSize;
         String filter = request.getFilter();
         Long userId = request.getUserId();
-        List<GratitudeDto> allGratitudes = gratitudeService.findAllGratitudes(userId,pageSize, offset,filter);
-        List<GratitudeDto> nextPage = gratitudeService.findAllGratitudes(userId,pageSize, offset + pageSize,filter);
+        List<GratitudeDto> allGratitudes = gratitudeService.findAllGratitudes(userId, pageSize, offset, filter);
+        List<GratitudeDto> nextPage = gratitudeService.findAllGratitudes(userId, pageSize, offset + pageSize, filter);
         boolean hasMore = !nextPage.isEmpty();
 
         GratitudePageResponse dto = mapper.toPageResponse(allGratitudes, page, pageSize, hasMore);
@@ -66,6 +66,7 @@ public class LiferayController {
                 .body(dto);
     }
 
+
     @PostMapping("/search")
     public List<UserResponseDto> searchUsers(@RequestBody SearchRequestDto request) {
         List<UserDto> users = liferayUserService.searchUsersByKeyword(request.getQuery());
@@ -73,6 +74,7 @@ public class LiferayController {
                 .map(liferayUserService::convertToResponseDto)
                 .toList();
     }
+
 
     @PostMapping("/like")
     public ResponseEntity<LikeResponseDto> handleLikeClick(@RequestBody LikeRequestDto request) {
@@ -84,6 +86,28 @@ public class LiferayController {
                 .created(location)
                 .body(dto);
     }
+
+
+    @PostMapping("/top-thankers")
+    public ResponseEntity<TopThankersResponseDto> findTopThanksGivers(@RequestBody TopRequestDto request) {
+
+        int limit = 4;
+        int offset = 0;
+        TopThankersResponseDto response = userService.findThankGivers(limit, offset);
+        return ResponseEntity.ok(response);
+
+    }
+
+
+    @PostMapping("/thanked-most-of-all")
+    public ResponseEntity<TopThankersResponseDto> findTopThanksReceivers(@RequestBody TopRequestDto request) {
+        int limit = 4;
+        int offset = 0;
+        var thanksReceivers = userService.findThanksReceivers(limit, offset);
+        return ResponseEntity.ok(thanksReceivers);
+
+    }
+
 }
 
 

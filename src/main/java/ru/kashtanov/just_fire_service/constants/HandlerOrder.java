@@ -1,4 +1,4 @@
-package ru.kashtanov.just_fire_service.exception.constants;
+package ru.kashtanov.just_fire_service.constants;
 
 /**
  * @author Viktor Кashtanov
