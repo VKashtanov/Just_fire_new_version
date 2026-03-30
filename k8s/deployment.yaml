@@ -1,0 +1,25 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: just-fire-service
+  labels:
+    app: just-fire-service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: just-fire-service
+  template:
+    metadata:
+      labels:
+        app: just-fire-service
+    spec:
+      containers:
+        - name: just-fire-service
+          image: just-fire-service:latest
+          imagePullPolicy: Never
+          ports:
+            - containerPort: 8081
+          envFrom:
+            - secretRef:
+                name: app-secrets
