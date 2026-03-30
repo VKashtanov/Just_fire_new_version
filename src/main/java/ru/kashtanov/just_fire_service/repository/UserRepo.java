@@ -33,6 +33,8 @@ public interface UserRepo extends JpaRepository<User, Long> {
             "LIMIT :limit OFFSET :offset", nativeQuery = true)
     List<TopThankerUserDto> findTopThanksGivers(@Param("limit") int limit, @Param("offset") int offset);
 
+
+
     @Query(value = "SELECT " +
             "CAST(u.user_id_from_common_db AS VARCHAR) as userId, " +
             "u.first_name as firstName, " +

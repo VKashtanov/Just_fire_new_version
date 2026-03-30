@@ -1,0 +1,10 @@
+services:
+  just-fire-service:
+    build: .
+    image: just-fire-service:latest
+    container_name: just-fire-service
+    ports:
+      - "8081:8081"
+    env_file:
+      - app.env
+    restart: unless-stopped
