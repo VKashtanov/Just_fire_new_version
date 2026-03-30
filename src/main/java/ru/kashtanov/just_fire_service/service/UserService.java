@@ -13,7 +13,6 @@ import java.util.Optional;
  */
 public interface UserService {
     public abstract TopThankersResponseDto findThankGivers(int limit, int offset);
-    public abstract List<UserDto> findTopGratitudeReceivers(int limit, int offset);
 
     public abstract TopThankersResponseDto findThanksReceivers(int limit, int offset);
 

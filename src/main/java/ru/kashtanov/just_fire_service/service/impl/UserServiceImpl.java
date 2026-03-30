@@ -14,7 +14,7 @@ import ru.kashtanov.just_fire_service.service.UserService;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
+
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -26,31 +26,16 @@ public class UserServiceImpl implements UserService {
         this.liferayUserService = liferayUserService;
     }
 
-    private static TopThankerUserDto rebuild(TopThankerUserDto s) {
-        return new TopThankerUserDto(
-                s.getUserId(),
-                s.getFirstName(),
-                s.getLastName(),
-                s.getFullName(),
-                s.getEmail(),
-                s.getPosition(),
-                s.getPortraitUrl(),
-                s.getThankedQty(),
-                s.getWasThankedQty());
-    }
-
     public User createUser(User user) {
         return userRepo.save(user);
     }
 
     public User getOrCreate(Long userId) {
-
         return findUserByCommonDbId(userId)
                 .orElseGet(() -> {
                     UserDto userDto = liferayUserService.fetchUserById(userId)
                             .orElseThrow(() -> new UserNotFoundException("User is not found in Incomand DB with id: " + userId));
                     User newUser = convertDtoToUser(userDto);
-
                     return createUser(newUser);
                 });
     }
@@ -70,21 +55,17 @@ public class UserServiceImpl implements UserService {
     }
 
 
-        public TopThankersResponseDto findThanksReceivers(int limit, int offset) {
-            List<TopThankerUserDto> stats = userRepo.findTopGratitudeRecipients(limit, offset);
-            List<TopThankerUserDto> list = stats.stream()
-                    .map(UserServiceImpl::rebuild)
-                    .toList();
-            var responseDto = new TopThankersResponseDto();
-            responseDto.setStatsType("top-recipients");  // ← другой тип!
-            responseDto.setUsers(list);
-            responseDto.setStatus("success");
+    public TopThankersResponseDto findThanksReceivers(int limit, int offset) {
+        List<TopThankerUserDto> stats = userRepo.findTopGratitudeRecipients(limit, offset);
+        List<TopThankerUserDto> list = stats.stream()
+                .map(UserServiceImpl::rebuild)
+                .toList();
+        var responseDto = new TopThankersResponseDto();
+        responseDto.setStatsType("top-recipients");  // ← другой тип!
+        responseDto.setUsers(list);
+        responseDto.setStatus("success");
 
-            return responseDto;
-        }
-
-    public List<UserDto> findTopGratitudeReceivers(int limit, int offset) {
-       return null;
+        return responseDto;
     }
 
 
@@ -142,5 +123,18 @@ public class UserServiceImpl implements UserService {
         user.setPortraitUrl(dto.getPortraitUrl());
         user.setPhone(dto.getPhone());
         return user;
+    }
+
+    private static TopThankerUserDto rebuild(TopThankerUserDto s) {
+        return new TopThankerUserDto(
+                s.getUserId(),
+                s.getFirstName(),
+                s.getLastName(),
+                s.getFullName(),
+                s.getEmail(),
+                s.getPosition(),
+                s.getPortraitUrl(),
+                s.getThankedQty(),
+                s.getWasThankedQty());
     }
 }

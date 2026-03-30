@@ -41,7 +41,6 @@ public class LiferayUserService {
 
 
     public List<UserDto> searchUsers(SearchUserRequest searchUserRequest) {
-        System.out.println("searchUsers: " + searchUserRequest);
         String url = liferayConfigs.getUrl() + "/o/util-incomand-api/users/_search";
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);

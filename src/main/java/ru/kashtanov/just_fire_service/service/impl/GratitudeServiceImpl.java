@@ -52,8 +52,8 @@ public class GratitudeServiceImpl implements GratitudeService {
 
         List<User> list = dto.getRecipientsIds().stream()
                 .map(userService::getOrCreate).toList();
-        System.out.println(user);
-        //
+
+
         List<GratitudeRecipient> recipientList = new ArrayList<>();
         list.forEach(recipient -> {
             var link = new GratitudeRecipient();
@@ -138,7 +138,7 @@ public class GratitudeServiceImpl implements GratitudeService {
         try {
             return GratitudeFilterType.valueOf(filter.toUpperCase());
         } catch (IllegalArgumentException e) {
-            return GratitudeFilterType.ALL;  // по умолчанию
+            return GratitudeFilterType.ALL;
         }
     }
 

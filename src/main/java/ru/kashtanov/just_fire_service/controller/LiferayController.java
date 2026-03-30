@@ -90,7 +90,6 @@ public class LiferayController {
 
     @PostMapping("/top-thankers")
     public ResponseEntity<TopThankersResponseDto> findTopThanksGivers(@RequestBody TopRequestDto request) {
-
         int limit = 4;
         int offset = 0;
         TopThankersResponseDto response = userService.findThankGivers(limit, offset);

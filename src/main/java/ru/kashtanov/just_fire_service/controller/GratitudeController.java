@@ -43,10 +43,9 @@ public class GratitudeController {
 
     @GetMapping()
     public List<GratitudeDto> getAll(@RequestParam(defaultValue = "20") int limit,
-                                     @RequestParam(defaultValue = "0") int offset)
-    {
+                                     @RequestParam(defaultValue = "0") int offset) {
         String all = GratitudeFilterType.ALL.getType();
         //todo ponder of changing endpoint dto processing , might be turn to POST
-        return gratitudeService.findAllGratitudes(1,limit, offset,all);
+        return gratitudeService.findAllGratitudes(1, limit, offset, all);
     }
 }
