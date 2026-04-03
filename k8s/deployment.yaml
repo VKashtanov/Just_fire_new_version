@@ -1,9 +1,11 @@
-apiVersion: apps/v1
-kind: Deployment
+#  Note! All Resources which related to the same microservice must have the common label
+
+apiVersion: apps/v1         # версия API Kubernetes для Deployment
+kind: Deployment            # тип ресурса — Deployment (управляет Pod'ами)
 metadata:
-  name: just-fire-service
-  labels:
-    app: just-fire-service
+  name: just-fire-service-deployment   # simply the name of resource
+  labels:                   # is need for it to be found by other resources (resources in k8s are objects, doing certain stuff)
+    app: just-fire-service  # MUST BE COMMON FOR ALL RESOURCES RELATED TO THE SAME MICROSERVICE
 spec:
   replicas: 1
   selector:
@@ -16,8 +18,8 @@ spec:
     spec:
       containers:
         - name: just-fire-service
-          image: just-fire-service:latest
-          imagePullPolicy: Never
+          image: just-fire-microservice:latest # the name of the image you created by -> docker build -t just-fire-microservice:latest .
+          imagePullPolicy: Never # download it from Dockerhub: never - it's for local development
           ports:
             - containerPort: 8081
           resources:
@@ -29,4 +31,6 @@ spec:
               memory: 512Mi
           envFrom:
             - secretRef:
-                name: app-secrets
+                name: just-fire-service-secrets
+
+
