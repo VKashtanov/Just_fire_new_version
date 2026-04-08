@@ -1,3 +1,4 @@
+# STAGE_1 BUILDER
 FROM eclipse-temurin:17-jdk-alpine  AS build
 WORKDIR /app
 COPY mvnw .
@@ -8,6 +9,7 @@ RUN ./mvnw dependency:go-offline -B
 COPY src src
 RUN ./mvnw package -DskipTests
 
+# STAGE_2 FINAL IMAGE
 FROM eclipse-temurin:17-jdk-alpine
 COPY --from=build /app/target/*.jar app.jar
 EXPOSE 8081

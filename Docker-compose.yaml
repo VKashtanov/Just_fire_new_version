@@ -8,3 +8,14 @@ services:
     env_file:
       - app.env
     restart: unless-stopped
+
+  redis:
+    image: redis:8.2.5
+    container_name: just-fire-redis
+    ports:
+      - "6300:6379"
+    command: redis-server /usr/local/etc/redis/redis.conf
+    volumes:
+      - ./redis.conf:/usr/local/etc/redis/redis.conf
+    env_file:
+      - app.env

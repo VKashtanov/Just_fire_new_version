@@ -1,6 +1,7 @@
 package ru.kashtanov.just_fire_service.service.impl;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import ru.kashtanov.just_fire_service.dto.UserDto;
 import ru.kashtanov.just_fire_service.dto.liferay_dto.TopThankerUserDto;
@@ -12,6 +13,7 @@ import ru.kashtanov.just_fire_service.model.User;
 import ru.kashtanov.just_fire_service.repository.UserRepo;
 import ru.kashtanov.just_fire_service.service.UserService;
 
+import org.springframework.data.domain.Pageable;
 import java.util.List;
 import java.util.Optional;
 
@@ -54,6 +56,11 @@ public class UserServiceImpl implements UserService {
 
     }
 
+
+    public List<UserDto>findUsers(Pageable pageable){
+        Page<User> all = userRepo.findAll(pageable);
+        return all.stream().map(this::buildUserDto).toList();
+    }
 
     public TopThankersResponseDto findThanksReceivers(int limit, int offset) {
         List<TopThankerUserDto> stats = userRepo.findTopGratitudeRecipients(limit, offset);

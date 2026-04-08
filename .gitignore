@@ -35,3 +35,4 @@ build/
 ### additional ###
 app.env
 k8s/secrets.yaml
+planned_structure

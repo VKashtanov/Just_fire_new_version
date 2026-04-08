@@ -60,10 +60,9 @@ public class LiferayController {
         boolean hasMore = !nextPage.isEmpty();
 
         GratitudePageResponse dto = mapper.toPageResponse(allGratitudes, page, pageSize, hasMore);
-        URI location = URI.create("/api/gratitudes");
-        return ResponseEntity
-                .created(location)
-                .body(dto);
+
+        return ResponseEntity.ok(dto);
+
     }
 
 

@@ -15,7 +15,8 @@ import java.util.List;
 public interface GratitudeRepo extends JpaRepository<Gratitude, Long> {
 
 
-    @Query(value = "SELECT * FROM gratitudes ORDER BY timestamp DESC LIMIT :limit OFFSET :offset",
+    @Query(value = "SELECT * FROM gratitudes " +
+            "ORDER BY timestamp DESC LIMIT :limit OFFSET :offset",
             nativeQuery = true)
     List<Gratitude> findPageableGratitudes(@Param("limit") int limit,
                                            @Param("offset") int offset);
